@@ -67,11 +67,11 @@ Generator.prototype.copyTemplates = function() {
    this._copyTemplate('config.js', 'scripts/angularfire');
    this._copyTemplate('firebase.js', 'scripts/services');
    if( this.configProps.simple ) {
-      var cssFileName = this.env.options.useSass? 'styles/angularfire.scss' : 'styles/angularfire.css';
+      var cssFileName = this.env.options.useSass? 'styles/main.scss' : 'styles/main.css';
       this._copyTemplate('login.js.tpl', 'scripts/services');
       this._copyTemplate('waitforauth.js', 'scripts/services');
       this._copyTemplate('ngcloakauth.js', 'scripts/directives');
-      this._appendToFile(cssFileName, 'styles/main.css');
+      this._appendToFile('styles/angularfire.css', cssFileName);
       if( this.configProps.routing ) {
          this._copyTemplate('routesecurity.js', 'scripts/angularfire');
       }
