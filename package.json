@@ -1,7 +1,7 @@
 {
   "name": "generator-angularfire",
   "version": "0.0.5",
-  "description": "Yeoman generator to add angularFire (Angular+Firebase) into an existing angular install",
+  "description": "Yeoman generator for angularFire (Angular + Firebase)",
   "keywords": [
     "yeoman-generator", "firebase", "angular", "angularfire"
   ],
