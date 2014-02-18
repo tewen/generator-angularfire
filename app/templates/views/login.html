@@ -2,62 +2,64 @@
 <div ng-cloak-auth class="row">
     <div class="col-md-12">
 
-        <legend>You need to add a logout button!</legend>
-<pre><code>
-  // like this
-  &lt;p&gt;&lt;button class="btn btn-default" ng-click="logout()"&gt;log out&lt;/button&gt;&lt;/p&gt;
+        <legend>You need to add a logout button first!</legend>
+<pre><code>// like this
+    &lt;p&gt;&lt;button class="btn btn-default" ng-click="logout()"&gt;log out&lt;/button&gt;&lt;/p&gt;
 
-  // and a controller to run it
-  function($scope, simpleLogin) {
+    // and a controller to run it
+    function($scope, simpleLogin) {
     $scope.logout = simpleLogin.logout;
-  }
+    }
 </code></pre>
+        <button ng-click="hasLogoutButton = true">Okay, I did this already.</button>
 
-        <!-- examples for fun and profit -->
-        <!--<div ng-show-auth="login">{{auth.user|json}}</div>-->
-        <!--<div ng-show-auth="error,logout">Logged out</div>-->
-        <!--<div ng-show-auth="error">{{auth.error}}</div>-->
-        <% if( useOauth ) { %><fieldset>
+        <div id="login-example-page" ng-if="hasLogoutButton">
+            <!-- examples for fun and profit -->
+            <!--<div ng-show-auth="login">{{auth.user|json}}</div>-->
+            <!--<div ng-show-auth="error,logout">Logged out</div>-->
+            <!--<div ng-show-auth="error">{{auth.error}}</div>-->
+            <% if( useOauth ) { %><fieldset>
             <legend>Oauth</legend>
             <p><% _.each( selectedProviders, function( provider ) { %><% if ( provider.value !== 'password' ){ %>
                 <button class="btn btn-lg btn-primary" ng-click="login('<%- provider.value %>')"><%- provider.name %></button><% } %><% }); %>
             </p>
         </fieldset><% } %>
 
-        <% if( usePasswordAuth ) { %>
-        <p>&nbsp;</p>
-        <form role="form">
-            <fielset>
-                <legend>Email/Password</legend>
+            <% if( usePasswordAuth ) { %>
+            <p>&nbsp;</p>
+            <form role="form">
+                <fielset>
+                    <legend>Email/Password</legend>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>email</label>
-                            <input class="form-control" type="text" ng-model="email" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>email</label>
+                                <input class="form-control" type="text" ng-model="email" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>password</label>
+                                <input class="form-control" type="password" ng-model="pass" />
+                            </div>
+
+                            <div class="form-group" ng-show="createMode">
+                                <label>confirm pass</label>
+                                <input class="form-control" type="password" ng-model="confirm" />
+                            </div>
+
+                            <button class="btn btn-primary" ng-click="loginPassword()" ng-hide="createMode">Log In</button>
+                            <button class="btn btn-default" ng-click="createMode = true" ng-hide="createMode">Register</button>
+                            <button class="btn btn-success" ng-cloak ng-show="createMode" ng-click="createAccount()">Create Account</button>
+                            <button class="btn btn-default" ng-cloak ng-show="createMode" ng-click="createMode = false">Cancel</button>
                         </div>
-
-                        <div class="form-group">
-                            <label>password</label>
-                            <input class="form-control" type="password" ng-model="pass" />
-                        </div>
-
-                        <div class="form-group" ng-show="createMode">
-                            <label>confirm pass</label>
-                            <input class="form-control" type="password" ng-model="confirm" />
-                        </div>
-
-                        <button class="btn btn-primary" ng-click="loginPassword()" ng-hide="createMode">Log In</button>
-                        <button class="btn btn-default" ng-click="createMode = true" ng-hide="createMode">Register</button>
-                        <button class="btn btn-success" ng-cloak ng-show="createMode" ng-click="createAccount()">Create Account</button>
-                        <button class="btn btn-default" ng-cloak ng-show="createMode" ng-click="createMode = false">Cancel</button>
                     </div>
-                </div>
-            </fielset>
-        </form>
-        <% } %>
+                </fielset>
+            </form>
+            <% } %>
 
-        <p ng-show="err" class="error">{{err}}</p>
+            <div ng-show="err" class="alert alert-danger"><strong>{{err}}</strong></div>
+
+        </div>
     </div>
 </div>
-
