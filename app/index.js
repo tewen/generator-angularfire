@@ -107,20 +107,23 @@ Generator.prototype._injectBowerScripts = function() {
       );
    } else {
       apputil.title('Injecting bower dependencies into %yellowapp/index.html%/yellow');
+      var exclude = ['angular-mocks.js', 'observe.js', 'angularfire.min.js'];
       wiredep({
          directory: 'app/bower_components',
          bowerJson: JSON.parse(fs.readFileSync(path.join(process.cwd(), 'bower.json'))),
          ignorePath: 'app/',
          htmlFile: 'app/index.html',
          cssPattern: '<link rel="stylesheet" href="{{filePath}}">',
-         exclude: ['angular-mocks.js', 'observe.js', 'angularfire.min.js']
+         exclude: exclude
       });
    }
 };
 
 Generator.prototype.injectAngularModules = function() {
    //todo move these to config.json
-   var deps = this._.map(['firebase', 'login'], function(dep) {
+   var depList = ['firebase'];
+   this.configProps.simple && depList.push('login');
+   var deps = this._.map(depList, function(dep) {
       return util.format('%s.%s', 'angularfire', dep);
    }, this).concat(['firebase']);
 
