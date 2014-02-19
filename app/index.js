@@ -67,11 +67,8 @@ Generator.prototype.copyTemplates = function() {
    this._copyTemplate('config.js', 'scripts/angularfire');
    this._copyTemplate('firebase.js', 'scripts/services');
    if( this.configProps.simple ) {
-      var cssFileName = this.env.options.useSass? 'styles/main.scss' : 'styles/main.css';
       this._copyTemplate('login.js.tpl', 'scripts/services');
-      this._copyTemplate('waitforauth.js', 'scripts/services');
-      this._copyTemplate('ngcloakauth.js', 'scripts/directives');
-      this._appendToFile('styles/angularfire.css', cssFileName);
+      this._copyTemplate('simpleLoginTools.js', 'scripts/angularfire');
       if( this.configProps.routing ) {
          this._copyTemplate('routesecurity.js', 'scripts/angularfire');
       }
@@ -121,11 +118,11 @@ Generator.prototype._injectBowerScripts = function() {
 
 Generator.prototype.injectAngularModules = function() {
    //todo move these to config.json
-   var depList = ['firebase'];
-   this.configProps.simple && depList.push('login');
-   var deps = this._.map(depList, function(dep) {
-      return util.format('%s.%s', 'angularfire', dep);
-   }, this).concat(['firebase']);
+   var deps = ['firebase', 'angularfire.firebase'];
+   if( this.configProps.simple ) {
+     deps.push('angularfire.login');
+     deps.push('simpleLoginTools');
+   }
 
    if( this.options['skip-add'] ) {
       this.log(
