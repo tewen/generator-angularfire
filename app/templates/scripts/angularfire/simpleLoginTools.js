@@ -88,6 +88,18 @@ angular.module('simpleLoginTools', [])
     $rootScope.$on('$firebaseSimpleLogin:login',  function() { loginState = 'login'; });
     $rootScope.$on('$firebaseSimpleLogin:logout', function() { loginState = 'logout'; });
     $rootScope.$on('$firebaseSimpleLogin:error',  function() { loginState = 'error'; });
+
+    function getExpectedState(scope, attr) {
+      var expState = scope.$eval(attr);
+      if( typeof(expState) !== 'string' && !angular.isArray(expState) ) {
+        expState = attr;
+      }
+      if( typeof(expState) === 'string' ) {
+        expState = expState.split(',');
+      }
+      return expState;
+    }
+
     function inList(needle, list) {
       var res = false;
       angular.forEach(list, function(x) {
@@ -99,6 +111,7 @@ angular.module('simpleLoginTools', [])
       });
       return res;
     }
+
     function assertValidStates(states) {
       if( !states.length ) {
         throw new Error('ng-show-auth directive must be login, logout, or error (you may use a comma-separated list)');
@@ -110,17 +123,19 @@ angular.module('simpleLoginTools', [])
       });
       return true;
     }
+
     return {
       restrict: 'A',
       link: function(scope, el, attr) {
-        var expState = (scope.$eval(attr.ngShowAuth)||attr.ngShowAuth);
-        if( typeof(expState) === 'string' ) {
-          expState = expState.split(',');
-        }
+        var expState = getExpectedState(scope, attr.ngShowAuth);
         assertValidStates(expState);
         function fn() {
-          var hide = !inList(loginState, expState);
-          el.toggleClass('ng-cloak', hide);
+          var show = inList(loginState, expState);
+          // sometimes if ngCloak exists on same element, they argue, so make sure that
+          // this one always runs last for reliability
+          setTimeout(function() {
+            el.toggleClass('ng-cloak', !show);
+          }, 0);
         }
         fn();
         $rootScope.$on('$firebaseSimpleLogin:login',  fn);

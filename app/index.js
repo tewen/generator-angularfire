@@ -152,6 +152,49 @@ Generator.prototype.injectScriptTags = function() {
    }, this);
 };
 
+Generator.prototype.addNavLinks = function() {
+  if( this.configProps.simple && this.configProps.loginPage ) {
+    var file = 'views/main.html';
+    var html = '    ' +
+      '<li ng-cloak ng-show-auth="login" ng-controller="LoginController">' +
+      '<a href="#" ng-click="logout()">Log Out</a>' +
+      '</li>\n'+
+      '    ' +
+      '<li ng-cloak ng-show-auth="[\'logout\',\'error\']">' +
+      '<a href="#/login">Log In</a>' +
+      '</li>';
+
+    if( this.options['skip-add'] ) {
+      this.log(
+        '\nI did not add navigation links for the new login page. You can\n' +
+          'do this manually by adding the following to app/views/main.html:'+
+          chalk.yellow.bold(html)
+      );
+    }
+    else {
+      //todo this should use a DOM parser rather than regexp
+      apputil.title('Injecting links into nav in %yellow%s%/yellow', file);
+      var res = apputil.appendToBlock(
+        this._,
+        path.join(this.env.options.appPath, file),
+        function(v) { return v.val; },
+        function(v) { return v.trim(); },
+        this._.map(html.split('\n'), function(v) { return { key: v.trim(), val: v }; }),
+        '<ul class="nav nav-pills pull-right">',
+        '</ul>'
+      );
+      this._.each(res, function(v,k) {
+        if(v === 'exists') {
+          console.log(colorAction('exists')+' '+k);
+        }
+        else {
+          console.log(colorAction('added')+' '+k);
+        }
+      });
+    }
+  }
+};
+
 Generator.prototype.setupTestUnits = function() {
    //todo
    //todo

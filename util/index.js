@@ -13,6 +13,7 @@ module.exports = {
    colors: colors,
    fetchAppName: fetchAppName,
    replaceTaggedBlock: replaceTaggedBlock,
+   appendToBlock: appendToBlock,
    addLibScripts: addLibScripts
 };
 
@@ -80,6 +81,10 @@ function rewrite (args) {
 
 function replaceTaggedBlock(filePath, headerTag, footerTag, newText) {
    return new TaggedBlock(filePath, headerTag, footerTag).replace(newText);
+}
+
+function appendToBlock(_, filePath, template, keyFn, rows, blockStart, blockEnd) {
+  return new TaggedBlock(filePath, blockStart, blockEnd).appendRows(template, rows, keyFn);
 }
 
 function addLibScripts(_, filePath, deps) {

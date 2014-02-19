@@ -33,6 +33,8 @@ angular.module('<%= scriptAppName %>')
       }
     };
 
+    $scope.logout = simpleLogin.logout;
+
     $scope.createAccount = function() {
       function assertValidLoginAttempt() {
         if( !$scope.email ) {
